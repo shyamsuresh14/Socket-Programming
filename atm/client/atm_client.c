@@ -3,7 +3,7 @@
 #include<sys/socket.h>
 #include<sys/types.h>
 #include<stdio.h>
-#include<string.h>
+#include<string.h> 
 #include<stdlib.h>
 int main()
 {
@@ -33,7 +33,13 @@ int main()
 		char r_msg[100],s_msg[100];
 		recv(csd, r_msg, 100, 0);
 		printf("\n%s", r_msg);
-		fgets(s_msg, 100, stdin);
+		if(strcmp(r_msg, "Account not found!") == 0)
+		{
+			recv(csd, r_msg, 100, 0);
+			printf("\n\n%s", r_msg);
+		}
+		scanf("%s", s_msg);
+		//fgets(s_msg, 100, stdin);
 		send(csd, s_msg, 100, 0);  	
 	}
 	/*

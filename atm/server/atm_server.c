@@ -3,13 +3,13 @@
 #include<netinet/in.h>
 #include<stdio.h>
 #include<string.h>
-#include<stdlib.h>
+#include<stdlib.h> 
 #include<unistd.h>
 int main()
 { 	
 	struct sockaddr_in servaddr, cliaddr;
 	int portnumber = 1213;
-	char accids[3][10] = {"1234\n", "5678\n", "9012\n"};
+	char accids[3][10] = {"1234", "5678\n", "9012\n"};
 	char pins[3][10] = {"aaaa\n", "bbbb\n", "cccc\n"};
 	
 	//creating a socket 
@@ -32,10 +32,10 @@ int main()
 	
 	listen(sockfd, 3);
 	
-	int addrlen = sizeof(servaddr);
+	int addrlen = sizeof(cliaddr);
 	
 
-	int new_sock = accept(sockfd, (struct sockaddr*) &servaddr, (socklen_t*)&addrlen);
+	int new_sock = accept(sockfd, (struct sockaddr*) &cliaddr, (socklen_t*)&addrlen);
 	
 	if(new_sock >= 0)
 	printf("Connection established!");
@@ -44,20 +44,21 @@ int main()
 	
 	int ind=-1, lin=-1, x = 1; 
 	while(1){
-		printf("\nIteration: %d", x++);
+		printf("\nIteration: %d :", x++);
 		char msg[100],accid[10],pin[10];
 		if(ind == -1)
 		{
 			int s = send(new_sock, "Enter account id: ", 100, 0);
 			//wait(NULL);
 			int r = recv(new_sock, accid, 10, 0);  
-			printf("\nSend: %d, Receive: %d, Received: %s", r, s, accid);	
+			printf("Send: %d, Receive: %d, Received: %s", r, s, accid);	
 			int i;
 			for(i=0; i<3; i++)
 			{
 				if(strcmp(accid, accids[i]) == 0)
 				{
 					ind = i; 
+					printf(" :Account id right!");
 					send(new_sock, "Enter pin: ", 100, 0);
 					break;
 				}	
@@ -66,6 +67,13 @@ int main()
 			{
 				send(new_sock, "Account not found!", 100, 0);	
 			}
+		}
+		else 
+		{
+			char ch;
+			printf("Close?: (y/n): ");
+			scanf("%c", &ch);
+			if(ch=='y') break;
 		}
 	}	
 	/*
